@@ -50,7 +50,6 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
-	frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.width);
     self = [super initWithFrame:frame];
     if (self) {
 			[self setNeedsDisplay];
