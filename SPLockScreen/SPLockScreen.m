@@ -15,6 +15,7 @@
 #define kAlterTwo							4321
 #define kTagIdentifier				22222
 
+
 @interface SPLockScreen()
 @property (nonatomic, strong) NormalCircle *selectedCell;
 @property (nonatomic, strong) SPLockOverlay *overLay;
