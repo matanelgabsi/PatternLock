@@ -141,7 +141,7 @@
 	self.oldCellIndex = self.currentCellIndex;
 	NSInteger cellPos = [self indexForPoint:point];
 	
-	if(cellPos >=0 && cellPos != self.oldCellIndex)
+	if(cellPos >=0 && cellPos != self.oldCellIndex && [self.cellsInOrder indexOfObject: @(self.currentCellIndex)] == NSNotFound)
 		[self.cellsInOrder addObject:@(self.currentCellIndex)];
 	
 	if(cellPos < 0 && self.oldCellIndex < 0) return;
