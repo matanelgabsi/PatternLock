@@ -15,11 +15,13 @@
 #define kAlterTwo							4321
 #define kTagIdentifier				22222
 
-#define kLineColor			[UIColor colorWithRed:56.0/255.0 green:131.0/255.0 blue:224.0/255.0 alpha:0.9]
-#define kLineGridColor  [UIColor colorWithRed:56.0/255.0 green:131.0/255.0 blue:224.0/255.0 alpha:1.0]
-#define kOuterColor			[UIColor colorWithRed:56.0/255.0 green:131.0/255.0 blue:224.0/255.0 alpha:0.9]
-#define kInnerColor			[UIColor colorWithRed:56.0/255.0 green:131.0/255.0 blue:224.0/255.0 alpha:0.5]
-#define kHighlightColor	[UIColor colorWithRed:56.0/255.0 green:131.0/255.0 blue:224.0/255.0 alpha:0.9]
+
+#define kOuterColor     [UIColor colorWithRed:94.0/255.0 green:132.0/255.0 blue:170.0/255.0 alpha:1]
+#define kInnerColor     [UIColor colorWithRed:59.0/255.0 green:83.0/255.0 blue:107.0/255.0 alpha:1]
+#define kHighlightColor [UIColor colorWithRed:52.0/255.0 green:152.0/255.0 blue:219.0/255.0 alpha:1]
+
+#define kLineColor      [UIColor colorWithRed:86.0/255.0 green:187.0/255.0 blue:255.0/232.0 alpha:1]
+#define kLineGridColor  [UIColor colorWithRed:86.0/255.0 green:187.0/255.0 blue:255.0/232.0 alpha:1]
 
 
 @interface SPLockScreen()
