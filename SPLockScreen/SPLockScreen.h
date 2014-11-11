@@ -29,6 +29,9 @@
 @property (nonatomic, strong) UIColor *innerColor;
 @property (nonatomic, strong) UIColor *highlightColor;
 
+@property (nonatomic) CGFloat padding;
+@property (nonatomic) CGFloat radius;
+
 // Init Method
 
 - (id)initWithDelegate:(id<LockScreenDelegate>)lockDelegate;

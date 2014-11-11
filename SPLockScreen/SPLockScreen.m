@@ -38,18 +38,8 @@
 @implementation SPLockScreen
 @synthesize delegate,selectedCell,overLay,oldCellIndex,currentCellIndex,drawnLines,finalLines,cellsInOrder,allowClosedPattern;
 
-@synthesize outerColor, innerColor, highlightColor, lineColor, lineGridColor;
+@synthesize outerColor, innerColor, highlightColor, lineColor, lineGridColor, padding, radius;
 
-- (id)init{
-	CGRect frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.width);
-	self = [super initWithFrame:frame];
-	if (self) {
-		[self setNeedsDisplay];
-		[self setUpTheScreen];
-		[self addGestureRecognizer];
-	}
-	return self;
-}
 
 - (id)initWithDelegate:(id<LockScreenDelegate>)lockDelegate
 {
@@ -63,24 +53,40 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.lineColor = kLineColor;
-        self.lineGridColor = kLineGridColor;
-        
-        self.outerColor = kOuterColor;
-        self.innerColor = kInnerColor;
-        self.highlightColor = kHighlightColor;
-        
-        [self setNeedsDisplay];
-        [self setUpTheScreen];
-        [self addGestureRecognizer];
+        [self initView];
     }
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self initView];
+    }
+    return self;
+}
+
+- (void)initView {
+    self.lineColor = kLineColor;
+    self.lineGridColor = kLineGridColor;
+    
+    self.outerColor = kOuterColor;
+    self.innerColor = kInnerColor;
+    self.highlightColor = kHighlightColor;
+    
+    self.radius = 35.0;
+    self.padding = 20.0;
+    
+    self.backgroundColor = [UIColor redColor];
+    
+    [self setNeedsDisplay];
+    [self setUpTheScreen];
+    [self addGestureRecognizer];
+}
+
+
 - (void)setUpTheScreen{
-	CGFloat radius = 30.0;
-	CGFloat gap = (self.frame.size.width - 6 * radius )/4;
-	CGFloat topOffset = radius;
+	CGFloat gap = (self.frame.size.width - padding * 2 - radius * 6)/2;
 	
 	for (int i=0; i < 9; i++) {
 		NormalCircle *circle = [[NormalCircle alloc]initwithRadius:radius];
@@ -89,8 +95,8 @@
         circle.highlightColor = highlightColor;
 		int column =  i % 3;
 		int row    = i / 3;
-		CGFloat x = (gap + radius) + (gap + 2*radius)*column;
-		CGFloat y = (row * gap + row * 2 * radius) + topOffset;
+		CGFloat x = padding + radius + (gap + 2*radius)*column;
+		CGFloat y = padding + radius + (gap + 2*radius)*row;
 		circle.center = CGPointMake(x, y);
 		circle.tag = (row+kSeed)*kTagIdentifier + (column + kSeed);
 		[self addSubview:circle];

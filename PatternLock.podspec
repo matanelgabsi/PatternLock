@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name = "PatternLock"
-    s.version = "1.0.1"
+    s.version = "1.1.1"
     s.summary = "A simple but fully functional pattern lock sdk for iOS (similar to the android pattern lock"
     s.homepage = "http://github.com/yuanping/PatternLock"
     s.license = 'MIT'
