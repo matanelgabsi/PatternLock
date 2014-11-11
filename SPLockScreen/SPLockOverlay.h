@@ -12,4 +12,7 @@
 @interface SPLockOverlay : UIView
 
 @property (nonatomic, strong) NSMutableArray *pointsToDraw;
+
+@property (nonatomic, strong) UIColor *lineColor;
+@property (nonatomic, strong) UIColor *lineGridColor;
 @end

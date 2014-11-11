@@ -15,6 +15,12 @@
 #define kAlterTwo							4321
 #define kTagIdentifier				22222
 
+#define kLineColor			[UIColor colorWithRed:56.0/255.0 green:131.0/255.0 blue:224.0/255.0 alpha:0.9]
+#define kLineGridColor  [UIColor colorWithRed:56.0/255.0 green:131.0/255.0 blue:224.0/255.0 alpha:1.0]
+#define kOuterColor			[UIColor colorWithRed:56.0/255.0 green:131.0/255.0 blue:224.0/255.0 alpha:0.9]
+#define kInnerColor			[UIColor colorWithRed:56.0/255.0 green:131.0/255.0 blue:224.0/255.0 alpha:0.5]
+#define kHighlightColor	[UIColor colorWithRed:56.0/255.0 green:131.0/255.0 blue:224.0/255.0 alpha:0.9]
+
 
 @interface SPLockScreen()
 @property (nonatomic, strong) NormalCircle *selectedCell;
@@ -29,6 +35,8 @@
 
 @implementation SPLockScreen
 @synthesize delegate,selectedCell,overLay,oldCellIndex,currentCellIndex,drawnLines,finalLines,cellsInOrder,allowClosedPattern;
+
+@synthesize outerColor, innerColor, highlightColor, lineColor, lineGridColor;
 
 - (id)init{
 	CGRect frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.width);
@@ -53,9 +61,16 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-			[self setNeedsDisplay];
-			[self setUpTheScreen];
-			[self addGestureRecognizer];
+        self.lineColor = kLineColor;
+        self.lineGridColor = kLineGridColor;
+        
+        self.outerColor = kOuterColor;
+        self.innerColor = kInnerColor;
+        self.highlightColor = kHighlightColor;
+        
+        [self setNeedsDisplay];
+        [self setUpTheScreen];
+        [self addGestureRecognizer];
     }
     return self;
 }
@@ -67,6 +82,9 @@
 	
 	for (int i=0; i < 9; i++) {
 		NormalCircle *circle = [[NormalCircle alloc]initwithRadius:radius];
+        circle.innerColor = innerColor;
+        circle.outerColor = outerColor;
+        circle.highlightColor = highlightColor;
 		int column =  i % 3;
 		int row    = i / 3;
 		CGFloat x = (gap + radius) + (gap + 2*radius)*column;
@@ -80,6 +98,8 @@
 	self.cellsInOrder = [[NSMutableArray alloc]init];
 	// Add an overlay view
 	self.overLay = [[SPLockOverlay alloc]initWithFrame:self.frame];
+    self.overLay.lineColor = lineColor;
+    self.overLay.lineGridColor = lineGridColor;
 	[self.overLay setUserInteractionEnabled:NO];
 	[self addSubview:self.overLay];
 	// set selected cell indexes to be invalid

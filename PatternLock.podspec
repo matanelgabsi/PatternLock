@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
     s.source = { :git => "https://github.com/yuanping/PatternLock.git" }
     s.requires_arc = true
     s.ios.deployment_target = "5.0"
-    s.source_files = 'PatternLock'
-    s.public_header_files = 'PatternLock/**/*.h'
+    s.source_files = 'SPLockScreen'
+    s.public_header_files = 'SPLockScreen/**/*.h'
     s.frameworks = 'Foundation'
 end

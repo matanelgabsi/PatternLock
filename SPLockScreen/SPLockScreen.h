@@ -22,6 +22,12 @@
 
 @property (nonatomic) BOOL allowClosedPattern;			// Set to YES to allow a closed pattern, a complex type pattern; NO by default
 
+@property (nonatomic, strong) UIColor *lineColor;
+@property (nonatomic, strong) UIColor *lineGridColor;
+
+@property (nonatomic, strong) UIColor *outerColor;
+@property (nonatomic, strong) UIColor *innerColor;
+@property (nonatomic, strong) UIColor *highlightColor;
 
 // Init Method
 
