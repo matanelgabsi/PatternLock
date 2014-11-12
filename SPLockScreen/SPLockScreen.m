@@ -77,7 +77,7 @@
     self.radius = 35.0;
     self.padding = 20.0;
     
-    self.backgroundColor = [UIColor redColor];
+    self.backgroundColor = [UIColor clearColor];
     
     [self setNeedsDisplay];
     [self setUpTheScreen];
