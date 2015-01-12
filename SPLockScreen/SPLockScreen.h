@@ -35,4 +35,6 @@
 // Init Method
 
 - (id)initWithDelegate:(id <LockScreenDelegate>)lockDelegate;
+- (void)resetScreen;
+
 @end
