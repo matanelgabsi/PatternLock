@@ -36,14 +36,14 @@
 @end
 
 @implementation SPLockScreen
-@synthesize delegate, selectedCell, overLay, oldCellIndex, currentCellIndex, drawnLines, finalLines, cellsInOrder, allowClosedPattern;
-
-@synthesize outerColor, innerColor, highlightColor, lineColor, lineGridColor, padding, radius;
 
 
 - (id)initWithDelegate:(id <LockScreenDelegate>)lockDelegate {
     self = [self init];
-    self.delegate = lockDelegate;
+    if (self) {
+        self.delegate = lockDelegate;
+        [self setupView];
+    }
 
     return self;
 }
@@ -51,7 +51,7 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        [self initView];
+        [self setupView];
     }
     return self;
 }
@@ -59,42 +59,26 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        [self initView];
+        [self setupView];
     }
     return self;
 }
 
-- (void)initView {
-    self.lineColor     = kLineColor;
-    self.lineGridColor = kLineGridColor;
 
-    self.outerColor     = kOuterColor;
-    self.innerColor     = kInnerColor;
-    self.highlightColor = kHighlightColor;
+- (void)setupView {
+    [self setDefaults];
 
-    self.radius  = 35.0;
-    self.padding = 20.0;
+    CGFloat gap = (self.frame.size.width - self.padding * 2 - self.radius * 6) / 2;
 
-    self.backgroundColor = [UIColor clearColor];
-
-    [self setNeedsDisplay];
-    [self setUpTheScreen];
-    [self addGestureRecognizer];
-}
-
-
-- (void)setUpTheScreen {
-    CGFloat gap = (self.frame.size.width - padding * 2 - radius * 6) / 2;
-
-    for (int i                 = 0; i < 9; i++) {
-        NormalCircle *circle = [[NormalCircle alloc] initwithRadius:radius];
-        circle.innerColor     = innerColor;
-        circle.outerColor     = outerColor;
-        circle.highlightColor = highlightColor;
-        int     column = i % 3;
-        int     row    = i / 3;
-        CGFloat x      = padding + radius + (gap + 2 * radius) * column;
-        CGFloat y      = padding + radius + (gap + 2 * radius) * row;
+    for (NSUInteger i          = 0; i < 9; i++) {
+        NormalCircle *circle = [[NormalCircle alloc] initwithRadius:self.radius];
+        circle.innerColor     = self.innerColor;
+        circle.outerColor     = self.outerColor;
+        circle.highlightColor = self.highlightColor;
+        NSUInteger     column = i % 3;
+        NSUInteger     row    = i / 3;
+        CGFloat x      = self.padding + self.radius + (gap + 2 * self.radius) * column;
+        CGFloat y      = self.padding + self.radius + (gap + 2 * self.radius) * row;
         circle.center = CGPointMake(x, y);
         circle.tag    = (row + kSeed) * kTagIdentifier + (column + kSeed);
         [self addSubview:circle];
@@ -104,13 +88,42 @@
     self.cellsInOrder          = [[NSMutableArray alloc] init];
     // Add an overlay view
     self.overLay               = [[SPLockOverlay alloc] initWithFrame:self.frame];
-    self.overLay.lineColor     = lineColor;
-    self.overLay.lineGridColor = lineGridColor;
+    self.overLay.lineColor     = self.lineColor;
+    self.overLay.lineGridColor = self.lineGridColor;
     [self.overLay setUserInteractionEnabled:NO];
     [self addSubview:self.overLay];
     // set selected cell indexes to be invalid
     self.currentCellIndex = -1;
     self.oldCellIndex     = self.currentCellIndex;
+
+    [self setNeedsDisplay];
+    [self addGestureRecognizer];
+}
+
+- (void)setDefaults {
+    if (!self.lineColor) {
+        self.lineColor = kLineColor;
+    }
+    if (!self.lineGridColor) {
+        self.lineGridColor = kLineGridColor;
+    }
+    if (!self.outerColor) {
+        self.outerColor = kOuterColor;
+    }
+    if (!self.innerColor) {
+        self.innerColor = kInnerColor;
+    }
+    if (!self.highlightColor) {
+        self.highlightColor = kHighlightColor;
+    }
+    if (!self.radius) {
+        self.radius = 35.0;
+    }
+    if (!self.padding) {
+        self.padding = 20.0;
+    }
+
+    self.backgroundColor = [UIColor clearColor];
 }
 
 #pragma - helper methods
@@ -121,19 +134,19 @@
             if (CGRectContainsPoint(view.frame, point)) {
                 NormalCircle *cell = (NormalCircle *)view;
 
-                if (cell.selected == NO) {
+                if (!cell.selected) {
                     [cell highlightCell];
                     self.currentCellIndex = [self indexForCell:cell];
                     self.selectedCell     = cell;
                 }
 
-                else if (cell.selected == YES && self.allowClosedPattern == YES) {
+                else if (cell.selected && self.allowClosedPattern) {
                     self.currentCellIndex = [self indexForCell:cell];
                     self.selectedCell     = cell;
                 }
 
-                int row    = view.tag / kTagIdentifier - kSeed;
-                int column = view.tag % kTagIdentifier - kSeed;
+                NSInteger row    = view.tag / kTagIdentifier - kSeed;
+                NSInteger column = view.tag % kTagIdentifier - kSeed;
                 return row * 3 + column;
             }
         }
@@ -142,7 +155,7 @@
 }
 
 - (NSInteger)indexForCell:(NormalCircle *)cell {
-    if ([cell isKindOfClass:[NormalCircle class]] == NO || [cell.superview isEqual:self] == NO)
+    if (![cell isKindOfClass:[NormalCircle class]] || ![cell.superview isEqual:self])
         return -1;
     else
         return (cell.tag / kTagIdentifier - kSeed) * 3 + (cell.tag % kTagIdentifier - kSeed);
@@ -177,15 +190,17 @@
         [self.overLay.pointsToDraw addObject:aLine];
         [self.overLay setNeedsDisplay];
     }
-    else if (cellPos >= 0 && self.currentCellIndex == self.oldCellIndex)
+    else if (cellPos >= 0 && self.currentCellIndex == self.oldCellIndex) {
         return;
-    else if (cellPos >= 0 && self.oldCellIndex == -1)
+    }
+    else if (cellPos >= 0 && self.oldCellIndex == -1) {
         return;
+    }
     else if (cellPos >= 0 && self.oldCellIndex != self.currentCellIndex) {
         // two situations: line already drawn, or not fully drawn yet
         NSNumber *uniqueId = [self uniqueLineIdForLineJoiningPoint:self.oldCellIndex AndPoint:self.currentCellIndex];
 
-        if (![self.drawnLines objectForKey:uniqueId]) {
+        if (!(self.drawnLines)[uniqueId]) {
             SPLine *aLine = [[SPLine alloc] initWithFromPoint:[self cellAtIndex:self.oldCellIndex].center
                                                       toPoint:self.selectedCell.center
                                               AndIsFullLength:YES];
@@ -193,17 +208,19 @@
             [self.overLay.pointsToDraw removeAllObjects];
             [self.overLay.pointsToDraw addObjectsFromArray:self.finalLines];
             [self.overLay setNeedsDisplay];
-            [self.drawnLines setObject:@(YES) forKey:uniqueId];
+            self.drawnLines[uniqueId] = @(YES);
         }
-        else
+        else {
             return;
+        }
     }
 }
 
 - (void)endPattern {
     NSLog(@"PATTERN: %@", [self patternToUniqueId]);
-    if ([self.delegate respondsToSelector:@selector(lockScreen:didEndWithPattern:)])
+    if ([self.delegate respondsToSelector:@selector(lockScreen:didEndWithPattern:)]) {
         [self.delegate lockScreen:self didEndWithPattern:[self patternToUniqueId]];
+    }
 
     [self resetScreen];
 }
@@ -211,8 +228,8 @@
 - (NSNumber *)patternToUniqueId {
     long     finalNumber = 0;
     long     thisNum;
-    for (int i           = self.cellsInOrder.count - 1; i >= 0; i--) {
-        thisNum     = ([[self.cellsInOrder objectAtIndex:i] integerValue] + 1) * pow(10, (self.cellsInOrder.count - i - 1));
+    for (NSUInteger i           = self.cellsInOrder.count - 1; i >= 0; i--) {
+        thisNum     = ([self.cellsInOrder[i] integerValue] + 1) * (long)pow(10, (self.cellsInOrder.count - i - 1));
         finalNumber = finalNumber + thisNum;
     }
     return @(finalNumber);
@@ -220,8 +237,9 @@
 
 - (void)resetScreen {
     for (UIView *view in self.subviews) {
-        if ([view isKindOfClass:[NormalCircle class]])
+        if ([view isKindOfClass:[NormalCircle class]]) {
             [(NormalCircle *)view resetCell];
+        }
     }
     [self.finalLines removeAllObjects];
     [self.drawnLines removeAllObjects];
@@ -247,13 +265,16 @@
     CGPoint point = [gesture locationInView:self];
     if ([gesture isKindOfClass:[UIPanGestureRecognizer class]]) {
         if (gesture.state == UIGestureRecognizerStateEnded) {
-            if (self.finalLines.count > 0)
+            if (self.finalLines.count > 0) {
                 [self endPattern];
-            else
+            }
+            else {
                 [self resetScreen];
+            }
         }
-        else
+        else {
             [self handlePanAtPoint:point];
+        }
     }
     else {
         NSInteger cellPos = [self indexForPoint:point];

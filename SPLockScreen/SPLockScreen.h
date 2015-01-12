@@ -18,7 +18,7 @@
 
 @interface SPLockScreen : UIView
 
-@property (nonatomic, strong) id <LockScreenDelegate> delegate;
+@property (nonatomic, weak) id <LockScreenDelegate> delegate;
 
 @property (nonatomic) BOOL allowClosedPattern;            // Set to YES to allow a closed pattern, a complex type pattern; NO by default
 

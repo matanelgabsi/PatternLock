@@ -42,6 +42,7 @@
 	self.lockScreenView = [[SPLockScreen alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.width)];
 	self.lockScreenView.center = self.view.center;
 	self.lockScreenView.delegate = self;
+
 	[self.view addSubview:self.lockScreenView];
 	
 	self.infoLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 20)];
