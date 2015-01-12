@@ -75,10 +75,10 @@
         circle.innerColor     = self.innerColor;
         circle.outerColor     = self.outerColor;
         circle.highlightColor = self.highlightColor;
-        NSUInteger     column = i % 3;
-        NSUInteger     row    = i / 3;
-        CGFloat x      = self.padding + self.radius + (gap + 2 * self.radius) * column;
-        CGFloat y      = self.padding + self.radius + (gap + 2 * self.radius) * row;
+        NSUInteger column = i % 3;
+        NSUInteger row    = i / 3;
+        CGFloat    x      = self.padding + self.radius + (gap + 2 * self.radius) * column;
+        CGFloat    y      = self.padding + self.radius + (gap + 2 * self.radius) * row;
         circle.center = CGPointMake(x, y);
         circle.tag    = (row + kSeed) * kTagIdentifier + (column + kSeed);
         [self addSubview:circle];
@@ -226,13 +226,13 @@
 }
 
 - (NSNumber *)patternToUniqueId {
-    long     finalNumber = 0;
-    long     thisNum;
-    for (NSUInteger i           = self.cellsInOrder.count - 1; i >= 0; i--) {
-        thisNum     = ([self.cellsInOrder[i] integerValue] + 1) * (long)pow(10, (self.cellsInOrder.count - i - 1));
-        finalNumber = finalNumber + thisNum;
+    NSMutableString *numberString = [NSMutableString new];
+
+    for (NSInteger i = self.cellsInOrder.count; i > 0; i--) {
+        NSNumber *thisNnumber = self.cellsInOrder[(NSUInteger)(i - 1)];
+        [numberString appendString:thisNnumber.stringValue];
     }
-    return @(finalNumber);
+    return @(numberString.integerValue);
 }
 
 - (void)resetScreen {
@@ -280,7 +280,7 @@
         NSInteger cellPos = [self indexForPoint:point];
         self.oldCellIndex = self.currentCellIndex;
         if (cellPos >= 0) {
-            [self.cellsInOrder addObject:@(self.currentCellIndex)];
+            [self.cellsInOrder addObject:@(self.currentCellIndex + 1)];
             [self performSelector:@selector(endPattern) withObject:nil afterDelay:0.3];
         }
     }
