@@ -241,8 +241,8 @@
 - (NSNumber *)patternToUniqueId {
     NSMutableString *numberString = [NSMutableString new];
 
-    for (NSInteger i = self.cellsInOrder.count; i > 0; i--) {
-        NSNumber *thisNumber = self.cellsInOrder[(NSUInteger)(i - 1)];
+    for (NSInteger i = 0; i < self.cellsInOrder.count; i++) {
+        NSNumber *thisNumber = self.cellsInOrder[(NSUInteger)i];
         [numberString appendString:thisNumber.stringValue];
     }
     return @(numberString.integerValue);
