@@ -10,7 +10,7 @@
 
 @interface NormalCircle : UIView
 
-@property (nonatomic) BOOL selected;
+@property (nonatomic) BOOL         selected;
 @property (nonatomic) CGContextRef cacheContext;
 
 @property (nonatomic, strong) UIColor *outerColor;
@@ -20,6 +20,7 @@
 - (id)initwithRadius:(CGFloat)radius;
 
 - (void)highlightCell;
+
 - (void)resetCell;
 
 @end

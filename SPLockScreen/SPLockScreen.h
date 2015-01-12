@@ -18,9 +18,9 @@
 
 @interface SPLockScreen : UIView
 
-@property (nonatomic, strong) id<LockScreenDelegate> delegate;
+@property (nonatomic, strong) id <LockScreenDelegate> delegate;
 
-@property (nonatomic) BOOL allowClosedPattern;			// Set to YES to allow a closed pattern, a complex type pattern; NO by default
+@property (nonatomic) BOOL allowClosedPattern;            // Set to YES to allow a closed pattern, a complex type pattern; NO by default
 
 @property (nonatomic, strong) UIColor *lineColor;
 @property (nonatomic, strong) UIColor *lineGridColor;
@@ -34,5 +34,5 @@
 
 // Init Method
 
-- (id)initWithDelegate:(id<LockScreenDelegate>)lockDelegate;
+- (id)initWithDelegate:(id <LockScreenDelegate>)lockDelegate;
 @end

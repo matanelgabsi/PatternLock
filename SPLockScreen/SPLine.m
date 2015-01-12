@@ -10,12 +10,11 @@
 
 @implementation SPLine
 
-- (id)initWithFromPoint:(CGPoint)A toPoint:(CGPoint)B AndIsFullLength:(BOOL)isFullLength;
-{
-	self.fromPoint = A;
-	self.toPoint = B;
-	self.isFullLength = isFullLength;
-	return self;
+- (id)initWithFromPoint:(CGPoint)A toPoint:(CGPoint)B AndIsFullLength:(BOOL)isFullLength; {
+    self.fromPoint    = A;
+    self.toPoint      = B;
+    self.isFullLength = isFullLength;
+    return self;
 }
 
 @end
