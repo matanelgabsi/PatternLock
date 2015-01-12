@@ -31,6 +31,18 @@
 @property (nonatomic, strong) NSMutableDictionary *drawnLines;
 @property (nonatomic, strong) NSMutableArray      *finalLines, *cellsInOrder;
 
+@property (nonatomic) BOOL allowClosedPattern;            // Set to YES to allow a closed pattern, a complex type pattern; NO by default
+
+@property (nonatomic, strong) UIColor *lineColor;
+@property (nonatomic, strong) UIColor *lineGridColor;
+
+@property (nonatomic, strong) UIColor *outerColor;
+@property (nonatomic, strong) UIColor *innerColor;
+@property (nonatomic, strong) UIColor *highlightColor;
+
+@property (nonatomic) CGFloat padding;
+@property (nonatomic) CGFloat radius;
+
 - (void)resetScreen;
 
 @end
@@ -42,36 +54,21 @@
     self = [self init];
     if (self) {
         self.delegate = lockDelegate;
-        [self setupView];
     }
 
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self setupView];
-    }
-    return self;
+- (void)willMoveToSuperview:(UIView *)newSuperview {
+    [self setDefaults];
+    [self setupView];
 }
-
-- (id)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        [self setupView];
-    }
-    return self;
-}
-
 
 - (void)setupView {
-    [self setDefaults];
-
     CGFloat gap = (self.frame.size.width - self.padding * 2 - self.radius * 6) / 2;
 
     for (NSUInteger i          = 0; i < 9; i++) {
-        NormalCircle *circle = [[NormalCircle alloc] initwithRadius:self.radius];
+        NormalCircle *circle = [[NormalCircle alloc] initWithRadius:self.radius];
         circle.innerColor     = self.innerColor;
         circle.outerColor     = self.outerColor;
         circle.highlightColor = self.highlightColor;
@@ -87,7 +84,7 @@
     self.finalLines            = [[NSMutableArray alloc] init];
     self.cellsInOrder          = [[NSMutableArray alloc] init];
     // Add an overlay view
-    self.overLay               = [[SPLockOverlay alloc] initWithFrame:self.frame];
+    self.overLay               = [[SPLockOverlay alloc] initWithFrame:self.bounds];
     self.overLay.lineColor     = self.lineColor;
     self.overLay.lineGridColor = self.lineGridColor;
     [self.overLay setUserInteractionEnabled:NO];
@@ -101,26 +98,36 @@
 }
 
 - (void)setDefaults {
-    if (!self.lineColor) {
-        self.lineColor = kLineColor;
-    }
-    if (!self.lineGridColor) {
-        self.lineGridColor = kLineGridColor;
-    }
-    if (!self.outerColor) {
-        self.outerColor = kOuterColor;
-    }
-    if (!self.innerColor) {
-        self.innerColor = kInnerColor;
-    }
-    if (!self.highlightColor) {
-        self.highlightColor = kHighlightColor;
-    }
-    if (!self.radius) {
-        self.radius = 35.0;
-    }
-    if (!self.padding) {
-        self.padding = 20.0;
+    self.lineColor      = kLineColor;
+    self.lineGridColor  = kLineGridColor;
+    self.outerColor     = kOuterColor;
+    self.innerColor     = kInnerColor;
+    self.highlightColor = kHighlightColor;
+    self.radius         = 35.0;
+    self.padding        = 20.0;
+
+    if (self.delegate) {
+        if ([self.delegate respondsToSelector:@selector(lineColor)]) {
+            self.lineColor = self.delegate.lineColor;
+        }
+        if ([self.delegate respondsToSelector:@selector(lineGridColor)]) {
+            self.lineGridColor = self.delegate.lineGridColor;
+        }
+        if ([self.delegate respondsToSelector:@selector(outerColor)]) {
+            self.outerColor = self.delegate.outerColor;
+        }
+        if ([self.delegate respondsToSelector:@selector(innerColor)]) {
+            self.innerColor = self.delegate.innerColor;
+        }
+        if ([self.delegate respondsToSelector:@selector(highlightColor)]) {
+            self.highlightColor = self.delegate.highlightColor;
+        }
+        if ([self.delegate respondsToSelector:@selector(radius)]) {
+            self.radius = self.delegate.radius;
+        }
+        if ([self.delegate respondsToSelector:@selector(padding)]) {
+            self.padding = self.delegate.padding;
+        }
     }
 
     self.backgroundColor = [UIColor clearColor];
@@ -140,9 +147,13 @@
                     self.selectedCell     = cell;
                 }
 
-                else if (cell.selected && self.allowClosedPattern) {
-                    self.currentCellIndex = [self indexForCell:cell];
-                    self.selectedCell     = cell;
+                else if (cell.selected) {
+                    if ([self.delegate respondsToSelector:@selector(allowClosedPattern)]) {
+                        if (self.delegate.allowClosedPattern) {
+                            self.currentCellIndex = [self indexForCell:cell];
+                            self.selectedCell     = cell;
+                        }
+                    }
                 }
 
                 NSInteger row    = view.tag / kTagIdentifier - kSeed;
@@ -175,11 +186,13 @@
     self.oldCellIndex = self.currentCellIndex;
     NSInteger cellPos = [self indexForPoint:point];
 
-    if (cellPos >= 0 && cellPos != self.oldCellIndex && [self.cellsInOrder indexOfObject:@(self.currentCellIndex)] == NSNotFound)
+    if (cellPos >= 0 && cellPos != self.oldCellIndex && [self.cellsInOrder indexOfObject:@(self.currentCellIndex)] == NSNotFound) {
         [self.cellsInOrder addObject:@(self.currentCellIndex)];
+    }
 
-    if (cellPos < 0 && self.oldCellIndex < 0)
+    if (cellPos < 0 && self.oldCellIndex < 0) {
         return;
+    }
 
     else if (cellPos < 0) {
         SPLine *aLine = [[SPLine alloc] initWithFromPoint:[self cellAtIndex:self.oldCellIndex].center
@@ -229,8 +242,8 @@
     NSMutableString *numberString = [NSMutableString new];
 
     for (NSInteger i = self.cellsInOrder.count; i > 0; i--) {
-        NSNumber *thisNnumber = self.cellsInOrder[(NSUInteger)(i - 1)];
-        [numberString appendString:thisNnumber.stringValue];
+        NSNumber *thisNumber = self.cellsInOrder[(NSUInteger)(i - 1)];
+        [numberString appendString:thisNumber.stringValue];
     }
     return @(numberString.integerValue);
 }

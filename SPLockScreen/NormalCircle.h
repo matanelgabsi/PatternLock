@@ -17,7 +17,7 @@
 @property (nonatomic, strong) UIColor *innerColor;
 @property (nonatomic, strong) UIColor *highlightColor;
 
-- (id)initwithRadius:(CGFloat)radius;
+- (id)initWithRadius:(CGFloat)radius;
 
 - (void)highlightCell;
 

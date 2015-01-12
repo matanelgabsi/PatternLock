@@ -14,11 +14,7 @@
 
 - (void)lockScreen:(SPLockScreen *)lockScreen didEndWithPattern:(NSNumber *)patternNumber;
 
-@end
-
-@interface SPLockScreen : UIView
-
-@property (nonatomic, weak) id <LockScreenDelegate> delegate;
+@optional
 
 @property (nonatomic) BOOL allowClosedPattern;            // Set to YES to allow a closed pattern, a complex type pattern; NO by default
 
@@ -31,6 +27,12 @@
 
 @property (nonatomic) CGFloat padding;
 @property (nonatomic) CGFloat radius;
+
+@end
+
+@interface SPLockScreen : UIView
+
+@property (nonatomic, weak) id <LockScreenDelegate> delegate;
 
 // Init Method
 

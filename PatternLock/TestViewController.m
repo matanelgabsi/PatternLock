@@ -36,9 +36,10 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
-    self.lockScreenView          = [[SPLockScreen alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.width)];
-    self.lockScreenView.center   = self.view.center;
-    self.lockScreenView.delegate = self;
+    CGRect frame = CGRectMake(100, 100, 568, 568);
+    self.lockScreenView        = [[SPLockScreen alloc] initWithDelegate:self];
+    self.lockScreenView.frame  = frame;
+    self.lockScreenView.center = self.view.center;
 
     [self.view addSubview:self.lockScreenView];
 
@@ -84,7 +85,7 @@
 }
 
 
-#pragma -LockScreenDelegate
+#pragma mark - LockScreenDelegate
 
 - (void)lockScreen:(SPLockScreen *)lockScreen didEndWithPattern:(NSNumber *)patternNumber {
     NSUserDefaults *stdDefault = [NSUserDefaults standardUserDefaults];
@@ -137,9 +138,33 @@
     }
 }
 
+- (BOOL)allowClosedPattern {
+    return YES;
+}
+
+- (UIColor *)lineColor {
+    return [UIColor redColor];
+}
+
+- (UIColor *)lineGridColor {
+    return nil;
+}
+
+- (UIColor *)outerColor {
+    return [UIColor yellowColor];
+}
+
+- (CGFloat)padding {
+    return 60;
+}
+
+- (CGFloat)radius {
+    return 60;
+}
+
+
 - (void)viewDidUnload {
     [self setInfoLabel:nil];
     [self setLockScreenView:nil];
-    [super viewDidUnload];
 }
 @end
