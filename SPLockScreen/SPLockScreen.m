@@ -64,6 +64,12 @@
     [self setupView];
 }
 
+- (void) setFrame: (CGRect) frame {
+    [super setFrame: frame];
+    [self setDefaults];
+    [self setupView];
+}
+
 - (void)setupView {
     CGFloat gap = (self.frame.size.width - self.padding * 2 - self.radius * 6) / 2;
 
