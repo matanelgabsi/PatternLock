@@ -25,7 +25,8 @@
 @property (nonatomic, strong) UIColor *innerColor;
 @property (nonatomic, strong) UIColor *highlightColor;
 
-@property (nonatomic) CGFloat padding;
+@property (nonatomic) CGFloat paddingX;
+@property (nonatomic) CGFloat paddingY;
 @property (nonatomic) CGFloat radius;
 
 @end
