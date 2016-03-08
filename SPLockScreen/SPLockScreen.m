@@ -15,13 +15,14 @@
 #define kAlterTwo                     4321
 #define kTagIdentifier                22222
 
+#define kUnselectedSize CGSizeMake(15, 15)
+#define kSelectedSize   CGSizeMake(30, 30)
+#define kOuterColor     [UIColor colorWithRed:0.0/255.0 green:0.0/255.0 blue:0.0/255.0 alpha:1]
+#define kInnerColor     [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1]
+#define kHighlightColor [UIColor colorWithRed:13.0/255.0 green:190.0/255.0 blue:144.0/255.0 alpha:1]
 
-#define kOuterColor     [UIColor colorWithRed:94.0/255.0 green:132.0/255.0 blue:170.0/255.0 alpha:1]
-#define kInnerColor     [UIColor colorWithRed:59.0/255.0 green:83.0/255.0 blue:107.0/255.0 alpha:1]
-#define kHighlightColor [UIColor colorWithRed:52.0/255.0 green:152.0/255.0 blue:219.0/255.0 alpha:1]
-
-#define kLineColor      [UIColor colorWithRed:86.0/255.0 green:187.0/255.0 blue:255.0/232.0 alpha:1]
-#define kLineGridColor  [UIColor colorWithRed:86.0/255.0 green:187.0/255.0 blue:255.0/232.0 alpha:1]
+#define kLineColor      [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/232.0 alpha:0.6]
+#define kLineGridColor  [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/232.0 alpha:0.6]
 
 
 @interface SPLockScreen ()
@@ -40,6 +41,8 @@
 @property (nonatomic, strong) UIColor *outerColor;
 @property (nonatomic, strong) UIColor *innerColor;
 @property (nonatomic, strong) UIColor *highlightColor;
+@property (nonatomic, assign) CGSize unselectedCircleSize;
+@property (nonatomic, assign) CGSize selectedCircleSize;
 
 @property (nonatomic) CGFloat paddingX;
 @property (nonatomic) CGFloat paddingY;
@@ -62,16 +65,16 @@
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
-    [self initialSetup];
     [self setDefaults];
+    [self initialSetup];
     [self setupView];
 }
 
 -(void)setBounds:(CGRect)newBounds {
     [super setBounds:newBounds];
     [self.overLay setFrame:self.bounds];
-    [self initialSetup];
     [self setDefaults];
+    [self initialSetup];
     [self setupView];
 }
 
@@ -110,6 +113,8 @@
         circle.innerColor     = self.innerColor;
         circle.outerColor     = self.outerColor;
         circle.highlightColor = self.highlightColor;
+        circle.selectedCircleSize = self.selectedCircleSize;
+        circle.unselectedCircleSize = self.unselectedCircleSize;
         NSUInteger column = i % 3;
         NSUInteger row    = i / 3;
         CGFloat    x      = self.paddingX + self.radius + (gapX + 2 * self.radius) * column;
@@ -129,6 +134,8 @@
     self.outerColor     = kOuterColor;
     self.innerColor     = kInnerColor;
     self.highlightColor = kHighlightColor;
+    self.unselectedCircleSize = kUnselectedSize;
+    self.selectedCircleSize = kSelectedSize;
     self.radius         = 35.0;
     self.paddingX        = 20.0;
     self.paddingY        = 20.0;
@@ -148,6 +155,12 @@
         }
         if ([self.delegate respondsToSelector:@selector(highlightColor)]) {
             self.highlightColor = self.delegate.highlightColor;
+        }
+        if ([self.delegate respondsToSelector:@selector(unselectedCircleSize)]) {
+            self.unselectedCircleSize = self.delegate.unselectedCircleSize;
+        }
+        if ([self.delegate respondsToSelector:@selector(selectedCircleSize)]) {
+            self.selectedCircleSize = self.delegate.selectedCircleSize;
         }
         if ([self.delegate respondsToSelector:@selector(radius)]) {
             self.radius = self.delegate.radius;
