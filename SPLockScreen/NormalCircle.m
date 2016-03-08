@@ -31,8 +31,9 @@
 - (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
     self.cacheContext = context;
-    CGFloat lineWidth  = 5.0;
-    CGRect  rectToDraw = CGRectMake(rect.origin.x + lineWidth, rect.origin.y + lineWidth, rect.size.width - 2 * lineWidth, rect.size.height - 2 * lineWidth);
+    CGFloat lineWidth  = 3.0;
+    CGSize unselectedInnerSize = CGSizeMake(self.unselectedCircleSize.width - 2 * lineWidth, self.unselectedCircleSize.height - 2 * lineWidth);
+    CGRect rectToDraw = CGRectMake(rect.origin.x + rect.size.width/2 - unselectedInnerSize.width/2, rect.origin.y + rect.size.height/2 - unselectedInnerSize.height/2, unselectedInnerSize.width, unselectedInnerSize.height);
     CGContextSetLineWidth(context, lineWidth);
     CGContextSetStrokeColorWithColor(context, self.outerColor.CGColor);
     CGContextStrokeEllipseInRect(context, rectToDraw);
@@ -46,9 +47,9 @@
         return;
 
     // For selected View
-    CGRect smallerRect = CGRectInset(rectToDraw, 10, 10);
-    CGContextSetFillColorWithColor(context, self.highlightColor.CGColor);
-    CGContextFillEllipseInRect(context, smallerRect);
+    CGRect selectedRect = CGRectMake(rect.origin.x + rect.size.width/2 - self.selectedCircleSize.width/2, rect.origin.y + rect.size.height/2 - self.selectedCircleSize.height/2, self.selectedCircleSize.width, self.selectedCircleSize.height);
+    CGContextSetStrokeColorWithColor(context, self.highlightColor.CGColor);
+    CGContextStrokeEllipseInRect(context, selectedRect);
 }
 
 - (void)highlightCell {
