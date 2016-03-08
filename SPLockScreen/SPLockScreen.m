@@ -16,7 +16,7 @@
 #define kTagIdentifier                22222
 
 #define kUnselectedSize CGSizeMake(15, 15)
-#define kSelectedSize   CGSizeMake(30, 30)
+#define kSelectedSize   CGSizeMake(50, 50)
 #define kOuterColor     [UIColor colorWithRed:0.0/255.0 green:0.0/255.0 blue:0.0/255.0 alpha:1]
 #define kInnerColor     [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1]
 #define kHighlightColor [UIColor colorWithRed:13.0/255.0 green:190.0/255.0 blue:144.0/255.0 alpha:1]
