@@ -16,6 +16,8 @@
 @property (nonatomic, strong) UIColor *outerColor;
 @property (nonatomic, strong) UIColor *innerColor;
 @property (nonatomic, strong) UIColor *highlightColor;
+@property (nonatomic, assign) CGSize unselectedCircleSize;
+@property (nonatomic, assign) CGSize selectedCircleSize;
 
 - (id)initWithRadius:(CGFloat)radius;
 
