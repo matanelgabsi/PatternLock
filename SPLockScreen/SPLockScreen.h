@@ -35,7 +35,7 @@
 @end
 
 @interface SPLockScreen : UIView
-
+@property (nonatomic, assign) BOOL noAutoReset;
 @property (nonatomic, weak) id <LockScreenDelegate> delegate;
 
 // Init Method

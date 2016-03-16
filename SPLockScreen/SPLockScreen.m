@@ -238,8 +238,13 @@
     if ([self.delegate respondsToSelector:@selector(lockScreen:didEndWithPattern:)]) {
         [self.delegate lockScreen:self didEndWithPattern:[self patternToUniqueId]];
     }
-
-    [self resetScreen];
+    if (!self.noAutoReset) {
+        [self resetScreen];
+    } else {
+        [self.overLay.pointsToDraw removeAllObjects];
+        [self.overLay.pointsToDraw addObjectsFromArray:self.finalLines];
+        [self.overLay setNeedsDisplay];
+    }
 }
 
 - (NSNumber *)patternToUniqueId {
@@ -286,6 +291,8 @@
             else {
                 [self resetScreen];
             }
+        } else if (gesture.state == UIGestureRecognizerStateBegan) {
+            [self resetScreen];
         }
         else {
             [self handlePanAtPoint:point];
